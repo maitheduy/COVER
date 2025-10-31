@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bìa Sách - 500 Phần Mềm Trí Tuệ Nhân Tạo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .control-panel {
+            width: 350px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .control-group h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 16px;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        .control-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        
+        .control-row label {
+            width: 80px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .control-row input, .control-row select {
+            flex: 1;
+            padding: 5px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .book-cover {
+            width: 595px;
+            height: 842px;
+            background-image: url('https://i.postimg.cc/J4p9q17t/Chat-GPT-Image-Oct-31-2025-02-12-30-PM.png');
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+        
+        .movable-element {
+            position: absolute;
+            cursor: move;
+        }
+        
+        .content-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #e3f2fd;
+        }
+        
+        .title-main {
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 58px;
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        
+        .title-sub {
+            color: #bbdefb;
+            font-size: 36px;
+            font-weight: 500;
+        }
+        
+        .ai-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .author {
+            font-size: 22px;
+            font-weight: 400;
+            font-style: italic;
+            color: #e3f2fd;
+        }
+        
+        .quote-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .quote {
+            font-size: 18px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .ai-icon {
+            font-size: 70px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 15px rgba(33, 150, 243, 0.7);
+        }
+        
+        .publisher {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #e3f2fd;
+        }
+        
+        .highlight {
+            color: #64ffda;
+            font-weight: 600;
+        }
+        
+        .tech-elements {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .tech-element {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .separator {
+            height: 3px;
+            width: 80px;
+            background: linear-gradient(to right, transparent, #64ffda, transparent);
+        }
+        
+        .url-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .update-btn {
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .update-btn:hover {
+            background: #45a049;
+        }
+        
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        .reset-btn:hover {
+            background: #da190b;
+        }
+        
+        .color-input {
+            width: 60px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .font-size-input {
+            width: 70px;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .text-area {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="control-panel">
+        <h2>Bảng Điều Khiển Bìa Sách</h2>
+        
+        <div class="control-group">
+            <h3>Hình Nền</h3>
+            <input type="text" id="imageUrl" class="url-input" 
+                   value="https://i.postimg.cc/J4p9q17t/Chat-GPT-Image-Oct-31-2025-02-12-30-PM.png"
+                   placeholder="Nhập URL hình ảnh...">
+            <button class="update-btn" onclick="updateImage()">Cập nhật Ảnh</button>
+        </div>
+
+        <div class="control-group">
+            <h3>Tiêu đề phụ</h3>
+            <input type="text" id="subtitleText" class="text-input" value="Phục vụ thầy cô và lớp học" onchange="updateText('subtitle', 'subtitleText')">
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="subtitleTop" value="60" onchange="updatePosition('subtitle')">
+                <label>Left:</label>
+                <input type="number" id="subtitleLeft" value="150" onchange="updatePosition('subtitle')">
+            </div>
+            <div class="control-row">
+                <label>Màu:</label>
+                <input type="color" id="subtitleColor" value="#e3f2fd" onchange="updateStyle('subtitle')">
+                <label>Font size:</label>
+                <input type="number" id="subtitleFontSize" value="20" class="font-size-input" onchange="updateStyle('subtitle')">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <h3>Tiêu đề chính</h3>
+            <input type="text" id="titleMainText" class="text-input" value="500 PHẦN MỀM" onchange="updateText('titleMain', 'titleMainText')">
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="titleMainTop" value="120" onchange="updatePosition('titleMain')">
+                <label>Left:</label>
+                <input type="number" id="titleMainLeft" value="100" onchange="updatePosition('titleMain')">
+            </div>
+            <div class="control-row">
+                <label>Màu:</label>
+                <input type="color" id="titleMainColor" value="#ffffff" onchange="updateStyle('titleMain')">
+                <label>Font size:</label>
+                <input type="number" id="titleMainFontSize" value="58" class="font-size-input" onchange="updateStyle('titleMain')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Tiêu đề phụ 2</h3>
+            <input type="text" id="titleSubText" class="text-input" value="Trí Tuệ Nhân Tạo" onchange="updateText('titleSub', 'titleSubText')">
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="titleSubTop" value="200" onchange="updatePosition('titleSub')">
+                <label>Left:</label>
+                <input type="number" id="titleSubLeft" value="150" onchange="updatePosition('titleSub')">
+            </div>
+            <div class="control-row">
+                <label>Màu:</label>
+                <input type="color" id="titleSubColor" value="#bbdefb" onchange="updateStyle('titleSub')">
+                <label>Font size:</label>
+                <input type="number" id="titleSubFontSize" value="36" class="font-size-input" onchange="updateStyle('titleSub')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Badge AI</h3>
+            <input type="text" id="aiBadgeText" class="text-input" value="AI" onchange="updateText('aiBadge', 'aiBadgeText')">
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="aiBadgeTop" value="280" onchange="updatePosition('aiBadge')">
+                <label>Left:</label>
+                <input type="number" id="aiBadgeLeft" value="250" onchange="updatePosition('aiBadge')">
+            </div>
+            <div class="control-row">
+                <label>Màu:</label>
+                <input type="color" id="aiBadgeColor" value="#ffffff" onchange="updateStyle('aiBadge')">
+                <label>Font size:</label>
+                <input type="number" id="aiBadgeFontSize" value="24" class="font-size-input" onchange="updateStyle('aiBadge')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Tech Elements</h3>
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="techElementsTop" value="320" onchange="updatePosition('techElements')">
+                <label>Left:</label>
+                <input type="number" id="techElementsLeft" value="150" onchange="updatePosition('techElements')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Tác giả</h3>
+            <input type="text" id="authorText" class="text-input" value="Tác giả: Mai Thế Duy" onchange="updateText('author', 'authorText')">
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="authorTop" value="380" onchange="updatePosition('author')">
+                <label>Left:</label>
+                <input type="number" id="authorLeft" value="180" onchange="updatePosition('author')">
+            </div>
+            <div class="control-row">
+                <label>Màu:</label>
+                <input type="color" id="authorColor" value="#e3f2fd" onchange="updateStyle('author')">
+                <label>Font size:</label>
+                <input type="number" id="authorFontSize" value="22" class="font-size-input" onchange="updateStyle('author')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Biểu tượng AI</h3>
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="aiIconTop" value="450" onchange="updatePosition('aiIcon')">
+                <label>Left:</label>
+                <input type="number" id="aiIconLeft" value="260" onchange="updatePosition('aiIcon')">
+            </div>
+            <div class="control-row">
+                <label>Màu:</label>
+                <input type="color" id="aiIconColor" value="#ffffff" onchange="updateStyle('aiIcon')">
+                <label>Size:</label>
+                <input type="number" id="aiIconSize" value="70" class="font-size-input" onchange="updateStyle('aiIcon')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Quote Section</h3>
+            <textarea id="quoteText" class="text-area" rows="3" onchange="updateText('quote', 'quoteText')">"Công cụ sáng tạo cho giáo dục hiện đại - Nơi ý tưởng gặp công nghệ"</textarea>
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="quoteSectionTop" value="550" onchange="updatePosition('quoteSection')">
+                <label>Left:</label>
+                <input type="number" id="quoteSectionLeft" value="100" onchange="updatePosition('quoteSection')">
+            </div>
+            <div class="control-row">
+                <label>Màu chữ:</label>
+                <input type="color" id="quoteColor" value="#ffffff" onchange="updateStyle('quote')">
+                <label>Font size:</label>
+                <input type="number" id="quoteFontSize" value="18" class="font-size-input" onchange="updateStyle('quote')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Nhà xuất bản</h3>
+            <input type="text" id="publisherText" class="text-input" value="Nhà xuất bản F-GROUP" onchange="updateText('publisher', 'publisherText')">
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="publisherTop" value="750" onchange="updatePosition('publisher')">
+                <label>Left:</label>
+                <input type="number" id="publisherLeft" value="180" onchange="updatePosition('publisher')">
+            </div>
+            <div class="control-row">
+                <label>Màu:</label>
+                <input type="color" id="publisherColor" value="#e3f2fd" onchange="updateStyle('publisher')">
+                <label>Font size:</label>
+                <input type="number" id="publisherFontSize" value="20" class="font-size-input" onchange="updateStyle('publisher')">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h3>Separator</h3>
+            <div class="control-row">
+                <label>Top:</label>
+                <input type="number" id="separatorTop" value="90" onchange="updatePosition('separator')">
+                <label>Left:</label>
+                <input type="number" id="separatorLeft" value="250" onchange="updatePosition('separator')">
+            </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetPositions()">Reset Tất Cả Vị Trí</button>
+    </div>
+
+    <div class="book-cover" id="bookCover">
+        <div class="content-overlay"></div>
+        
+        <!-- Tất cả các phần tử có thể di chuyển -->
+        <div class="movable-element subtitle" id="subtitle" style="top: 60px; left: 150px;">Phục vụ thầy cô và lớp học</div>
+        
+        <div class="movable-element title-main" id="titleMain" style="top: 120px; left: 100px;">500 PHẦN MỀM</div>
+        
+        <div class="movable-element title-sub" id="titleSub" style="top: 200px; left: 150px;">Trí Tuệ Nhân Tạo</div>
+        
+        <div class="movable-element ai-badge" id="aiBadge" style="top: 280px; left: 250px;">AI</div>
+        
+        <div class="movable-element tech-elements" id="techElements" style="top: 320px; left: 150px;">
+            <div class="tech-element">Giáo Dục</div>
+            <div class="tech-element">Công Nghệ</div>
+            <div class="tech-element">Sáng Tạo</div>
+        </div>
+        
+        <div class="movable-element author" id="author" style="top: 380px; left: 180px;">Tác giả: <span class="highlight">Mai Thế Duy</span></div>
+        
+        <div class="movable-element ai-icon" id="aiIcon" style="top: 450px; left: 260px;">
+            <i class="fas fa-robot"></i>
+        </div>
+        
+        <div class="movable-element quote-section" id="quoteSection" style="top: 550px; left: 100px;">
+            <p class="quote" id="quote">"Công cụ sáng tạo cho giáo dục hiện đại - Nơi ý tưởng gặp công nghệ"</p>
+        </div>
+        
+        <div class="movable-element publisher" id="publisher" style="top: 750px; left: 180px;">Nhà xuất bản <span class="highlight">F-GROUP</span></div>
+        
+        <div class="movable-element separator" id="separator" style="top: 90px; left: 250px;"></div>
+    </div>
+
+    <script>
+        function updatePosition(elementId) {
+            const element = document.getElementById(elementId);
+            const topValue = document.getElementById(elementId + 'Top').value + 'px';
+            const leftValue = document.getElementById(elementId + 'Left').value + 'px';
+            
+            element.style.top = topValue;
+            element.style.left = leftValue;
+        }
+        
+        function updateText(elementId, inputId) {
+            const element = document.getElementById(elementId);
+            const newText = document.getElementById(inputId).value;
+            
+            if (elementId === 'quote') {
+                element.textContent = newText;
+            } else {
+                element.textContent = newText;
+            }
+        }
+        
+        function updateStyle(elementId) {
+            const element = document.getElementById(elementId);
+            const color = document.getElementById(elementId + 'Color').value;
+            const fontSize = document.getElementById(elementId + 'FontSize').value + 'px';
+            
+            element.style.color = color;
+            element.style.fontSize = fontSize;
+            
+            // Xử lý đặc biệt cho icon
+            if (elementId === 'aiIcon') {
+                const iconSize = document.getElementById('aiIconSize').value + 'px';
+                const icon = element.querySelector('i');
+                if (icon) {
+                    icon.style.fontSize = iconSize;
+                    icon.style.color = color;
+                }
+            }
+        }
+        
+        function updateImage() {
+            const imageUrl = document.getElementById('imageUrl').value;
+            const bookCover = document.getElementById('bookCover');
+            
+            if (imageUrl) {
+                bookCover.style.backgroundImage = `url('${imageUrl}')`;
+            }
+        }
+        
+        function resetPositions() {
+            const elements = [
+                'subtitle', 'titleMain', 'titleSub', 'aiBadge', 'techElements', 
+                'author', 'aiIcon', 'quoteSection', 'publisher', 'separator'
+            ];
+            
+            elements.forEach(elementId => {
+                const defaultValues = getDefaultValues(elementId);
+                document.getElementById(elementId + 'Top').value = defaultValues.top;
+                document.getElementById(elementId + 'Left').value = defaultValues.left;
+                updatePosition(elementId);
+            });
+        }
+        
+        function getDefaultValues(elementId) {
+            const defaults = {
+                subtitle: { top: 60, left: 150 },
+                titleMain: { top: 120, left: 100 },
+                titleSub: { top: 200, left: 150 },
+                aiBadge: { top: 280, left: 250 },
+                techElements: { top: 320, left: 150 },
+                author: { top: 380, left: 180 },
+                aiIcon: { top: 450, left: 260 },
+                quoteSection: { top: 550, left: 100 },
+                publisher: { top: 750, left: 180 },
+                separator: { top: 90, left: 250 }
+            };
+            
+            return defaults[elementId] || { top: 0, left: 0 };
+        }
+        
+        // Khởi tạo vị trí ban đầu
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = [
+                'subtitle', 'titleMain', 'titleSub', 'aiBadge', 'techElements', 
+                'author', 'aiIcon', 'quoteSection', 'publisher', 'separator'
+            ];
+            
+            elements.forEach(elementId => {
+                updatePosition(elementId);
+            });
+        });
+    </script>
+</body>
+</html>
